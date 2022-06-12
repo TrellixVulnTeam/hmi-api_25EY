@@ -18,6 +18,6 @@ app.get('/api', async (req,res) => {
     res.status(200).json({all_logs});
 });
 
-app.listen(3000,()=> {
+app.listen(process.env.PORT || 3000,()=> {
     console.log("Server started")
 });
