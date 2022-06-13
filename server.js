@@ -18,6 +18,34 @@ app.get('/api', async (req,res) => {
     res.status(200).json({all_logs});
 });
 
+app.get('/api/:id', async (req,res) => {
+    const log = await db.getLogById(req.params.id);
+    res.status(200).json({log});
+});
+
+app.post('/api/login', async (req,res) => {
+    const login = await db.signup(req.body.user,req.body.password);
+    if(login.userFound){
+        res.status(200).json({success:true});
+    } 
+    if(!login.userFound) {
+        res.status(200).json({success:false});
+    }
+    if(!login.password){
+        res.status(200).json({success:false});
+    }
+});
+
+app.post('/api/signup', async (req,res) => {
+    const signup = await db.signup(req.body.user,req.body.password);
+    if(signup.userexists){
+        res.status(200).json({success:false});
+    } 
+    if(!signup.userexists) {
+        res.status(200).json({success:true});
+    }
+})
+
 app.listen(process.env.PORT || 3000,()=> {
     console.log("Server started")
 });
