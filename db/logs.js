@@ -12,9 +12,13 @@ function clearAllLogs() {
     return knex("logs").select("*").del();
 }
 
-function getLogById(id) {
-    return knex("logs").where("id", id).first();
+function getALLUsers() {
+    return knex("users").select("*");
 }
+
+// function getLogById(id) {
+//     return knex("logs").where("id", id).first();
+// }
 
 async function signup(aadhar) {
     const u = await knex("users").where("aadharno",aadhar);
@@ -26,23 +30,18 @@ async function signup(aadhar) {
     }
 }
 
-function makeUser(firstnanme,lastname,aadharno,mobile,email) {
-    knex("users").insert({firstnanme,lastname,aadharno,mobile,email});
-    return {"success":true};
+function makeUser(user) {
+    console.log(user);
+    knex("users").insert(user).then(()=> console.log("User Added"));
 }
 
-function login(user,password) {
-    const u= knex("users").where(user).first();
-    if(u==NULL){
-        return {"userFound":false};
+async function login(user) {
+    const u= await knex("users").where({"aadharno":user.aadharno,"firstname":user.firstname});
+    if(u.length==0){
+        return {"userfound":false};
     }
     else {
-        if(knex("users").where(user).first().password==password){
-            return {"userFound":true};
-        }
-        else{
-            return {"password":false};
-        }
+        return {"userfound":true};
     }
 }
 
@@ -53,6 +52,7 @@ module.exports = {
     createNewLog,
     getAllLogs,
     clearAllLogs,
-    getLogById,
+    getALLUsers,
+    // getLogById,
     makeUser,
 }
