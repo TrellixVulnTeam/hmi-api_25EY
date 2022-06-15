@@ -21,7 +21,7 @@ function getALLUsers() {
 // }
 
 async function signup(aadhar) {
-    const u = await knex("users").where("aadharno",aadhar);
+    const u = await knex("users").where({aadharno:aadhar});
     if(u.length==0){
         return {"userexists":false};
     }
@@ -36,7 +36,7 @@ function makeUser(user) {
 }
 
 async function login(user) {
-    const u= await knex("users").where({"aadharno":user.aadharno,"firstname":user.firstname});
+    const u= await knex("users").where({aadharno:user.aadharno,firstname:user.firstname});
     if(u.length==0){
         return {"userfound":false};
     }
