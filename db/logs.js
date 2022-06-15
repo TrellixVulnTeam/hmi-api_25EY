@@ -16,15 +16,19 @@ function getLogById(id) {
     return knex("logs").where("id", id).first();
 }
 
-function signup(user,password) {
-    const u = knex("users").where(user).first();
-    if(u==NULL) {
-        knex("users").insert({user,password});
+async function signup(aadhar) {
+    const u = await knex("users").where("aadharno",aadhar);
+    if(u.length==0){
         return {"userexists":false};
     }
-    else{
-        return {"userexists":true}
+    else {
+        return {"userexists":true};
     }
+}
+
+function makeUser(firstnanme,lastname,aadharno,mobile,email) {
+    knex("users").insert({firstnanme,lastname,aadharno,mobile,email});
+    return {"success":true};
 }
 
 function login(user,password) {
@@ -50,4 +54,5 @@ module.exports = {
     getAllLogs,
     clearAllLogs,
     getLogById,
+    makeUser,
 }
