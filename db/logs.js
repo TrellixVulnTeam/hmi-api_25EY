@@ -1,7 +1,7 @@
 const knex = require('./knex');
 
 function createNewLog(log) {
-    return knex("logs").insert(log);
+    knex("logs").insert(log).then(()=> console.log("Log Added"));
 };
 
 function getAllLogs() {
@@ -16,10 +16,6 @@ function getALLUsers() {
     return knex("users").select("*");
 }
 
-// function getLogById(id) {
-//     return knex("logs").where("id", id).first();
-// }
-
 async function signup(aadhar) {
     const u = await knex("users").where({aadharno:aadhar});
     if(u.length==0){
@@ -33,6 +29,38 @@ async function signup(aadhar) {
 function makeUser(user) {
     console.log(user);
     knex("users").insert(user).then(()=> console.log("User Added"));
+}
+
+function makeTempUser(user, otp) {
+    knex("tempusers")
+        .insert({firstname:user.firstname, lastname:user.lastname, aadharno:user.aadharno, email:user.email, mobile:user.mobile, otp:otp})
+        .then(()=> console.log("Temp User Added"));
+}
+
+function otpVerify(otp) {
+    let f = false;
+    knex("tempusers")
+        .where({otp:otp})
+        .first()
+        .then((user)=>{
+            if(user){
+                console.log(user);
+                knex("users")
+                    .insert({firstname:user.firstname, lastname:user.lastname, aadharno:user.aadharno, email:user.email, mobile:user.mobile})
+                    .then(()=> console.log("User Added"));
+                knex("tempusers")
+                    .where({otp:otp})
+                    .del()
+                    .then(()=> console.log("Temp User Deleted"));
+                f = true;
+
+            }
+            else {
+                console.log("OTP Invalid");
+                f = false;
+            }
+        });
+    return {"otpvalid":f};
 }
 
 async function login(user) {
@@ -53,6 +81,7 @@ module.exports = {
     getAllLogs,
     clearAllLogs,
     getALLUsers,
-    // getLogById,
     makeUser,
+    makeTempUser,
+    otpVerify,
 }
