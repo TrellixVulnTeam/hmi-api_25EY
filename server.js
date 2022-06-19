@@ -35,7 +35,7 @@ app.post("/api/login", async (req, res) => {
     res.status(200).json({ success: true });
   }
   else {
-    res.status(200).json({ success: false });
+    res.status(400).json({ success: false });
   }
 });
 
@@ -50,7 +50,7 @@ app.post("/api/signup", async (req, res) => {
     res.status(200).json(req.body);
   }
   else {
-    res.status(200).json({ message:"User Already Exists!" });
+    res.status(400).json({ message:"User Already Exists!" });
   }
 });
 
@@ -58,10 +58,10 @@ app.post("/api/otp", async (req, res) => {
   const verified = await db.otpVerify(req.body.otp);
   console.log(verified);
   if (verified) {
-    res.status(200).json({ success: true });
+    res.status(201).json({ success: true });
   }
   else {
-    res.status(200).json({ success: false });
+    res.status(400).json({ success: false });
   }
 });
 
