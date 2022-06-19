@@ -47,10 +47,10 @@ function otpVerify(otp) {
                 knex("users")
                     .insert({firstname:user.firstname, lastname:user.lastname, aadharno:user.aadharno, email:user.email, mobile:user.mobile})
                     .then(()=> console.log("User Added"));
-                // knex("tempusers")
-                //     .where({otp:otp})
-                //     .del()
-                //     .then(()=> console.log("Temp User Deleted"));
+                knex("tempusers")
+                    .where({otp:otp})
+                    .del()
+                    .then(()=> console.log("Temp User Deleted"));
                 return true;
             }
             else {
