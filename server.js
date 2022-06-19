@@ -5,7 +5,16 @@ require('dotenv').config();
 const mailer = require("./mailer");
 const sms = require("./sms");
 const otp = require("./otpGen");
+const rateLimit = require("express-rate-limit");
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "Too many requests from this IP, please try again after 15 minutes"
+});
+app.use(limiter);
 app.use(express.json());
 
 app.post("/api/log", async (req, res) => {
