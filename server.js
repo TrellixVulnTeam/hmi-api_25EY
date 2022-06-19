@@ -55,9 +55,9 @@ app.post("/api/signup", async (req, res) => {
 });
 
 app.post("/api/otp", async (req, res) => {
-  const verification = await db.otpVerify(req.body.otp);
-  console.log(verification);
-  if (verification.otpvalid == true) {
+  const verified = await db.otpVerify(req.body.otp);
+  console.log(verified);
+  if (verified) {
     res.status(200).json({ success: true });
   }
   else {

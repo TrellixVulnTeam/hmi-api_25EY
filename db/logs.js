@@ -38,8 +38,7 @@ function makeTempUser(user, otp) {
 }
 
 function otpVerify(otp) {
-    let f = false;
-    knex("tempusers")
+    return knex("tempusers")
         .where({otp:otp})
         .first()
         .then((user)=>{
@@ -48,19 +47,18 @@ function otpVerify(otp) {
                 knex("users")
                     .insert({firstname:user.firstname, lastname:user.lastname, aadharno:user.aadharno, email:user.email, mobile:user.mobile})
                     .then(()=> console.log("User Added"));
-                knex("tempusers")
-                    .where({otp:otp})
-                    .del()
-                    .then(()=> console.log("Temp User Deleted"));
-                f = true;
-
+                // knex("tempusers")
+                //     .where({otp:otp})
+                //     .del()
+                //     .then(()=> console.log("Temp User Deleted"));
+                return true;
             }
             else {
                 console.log("OTP Invalid");
-                f = false;
+                return false;
             }
         });
-    return {"otpvalid":f};
+    return false;
 }
 
 async function login(user) {
